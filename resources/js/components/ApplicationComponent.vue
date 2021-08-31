@@ -36,10 +36,10 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="portfolio_url" class="form-label">Portfolio Link</label>
-                                    <input id="portfolio_url" class="form-control" type="text" v-model="portfolio_url"/>
+                                    <input id="portfolio_url" class="form-control" type="text" @change="validatePortfolioURL" v-model.lazy="portfolio_url"/>
                                 </div>
                             </div>
-                            <div v-if="portfolio_url" class="row">
+                            <div v-if="portfolio_url_unique" class="row">
                                 <div class="col-sm-12">
                                     <label for="confirm_ownership" class="form-check-label">Yes, I confirm that the content I submit is authored by me</label>
                                     <input id="confirm_ownership" class="form-check-control" type="checkbox" v-model="owns_content_confirmed"/>
@@ -165,11 +165,12 @@ export default {
 
         return {
             page: 1,
+            portfolio_url_unique: false,
+            owns_content_confirmed: false,
             first_name: "",
             last_name: "",
             shop_category: "",
             portfolio_url: "",
-            owns_content_confirmed: false,
             online_store: "",
             online_store_list: "",
             question_one: "",
@@ -182,6 +183,8 @@ export default {
     },
     methods: {
         submit: function (event) {
+            let self = this;
+
             axios({
                 method: 'post',
                 url: 'api/v1/sellerApplications',
@@ -201,11 +204,28 @@ export default {
                     }),
                 }
             }).then(function (response) {
-                console.log(response);
-                this.page = 3;
-            }).catch(function (error) {
-                console.log(error);
+                self.page = 3;
             });
+        },
+        validatePortfolioURL: function (event) {
+            let self = this;
+            if (this.isValidURL(this.portfolio_url)) {
+                axios({
+                    method: 'post',
+                    url: 'api/v1/sellerApplications/portfolioUnique',
+                    data : {
+                        portfolio_url : this.portfolio_url,
+                    }
+                }).then(function (response) {
+                    self.portfolio_url_unique = response.data.unique;
+                });
+            }
+        },
+        isValidURL : function (url) {
+            // Use regex to lightly check if string is likely a valid URL before making rest request to our servers.
+            // Regex from: https://stackoverflow.com/a/49849482
+            let res = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+            return (res !== null)
         },
         nextPage: function (event) {
             // TODO: validate data.

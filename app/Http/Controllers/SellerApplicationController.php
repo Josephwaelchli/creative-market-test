@@ -14,14 +14,14 @@ class SellerApplicationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function portfolioExists(Request $request): JsonResponse
+    public function portfolioUnique(Request $request): JsonResponse
     {
         $application = SellerApplication::where('portfolio_url', $request->portfolio_url)->first();
-        $portfolio_exists = !empty($application);
+        $portfolio_unique = empty($application);
 
         return response()->json(
             [
-                'exists' => $portfolio_exists,
+                'unique' => $portfolio_unique,
             ]
         );
     }

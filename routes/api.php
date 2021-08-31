@@ -18,7 +18,7 @@ use \App\Http\Controllers\SellerApplicationController;
 Route::prefix('/v1')->group(function () {
     Route::prefix('/sellerApplications')->group(function () {
         Route::post('/', [SellerApplicationController::class, 'create']);
-        Route::post('/portfolioExists', [SellerApplicationController::class, 'portfolioExists']);
+        Route::post('/portfolioUnique', [SellerApplicationController::class, 'portfolioUnique']);
     });
 });
 
