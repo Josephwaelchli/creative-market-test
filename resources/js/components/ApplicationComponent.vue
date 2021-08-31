@@ -3,88 +3,95 @@
         <div class="row align-content-center justify-content-center">
             <div class="col-md-8">
                 <div class="card align-middle">
-                    <div class="card-body">
+                    <div class="card-body seller-application">
                         <div v-if="page<3" class="row">
                             <div class="col-sm-8 text-start">SELLER APPLICATION</div>
                             <div class="col-sm-4 text-end">STEP {{ page }} OF 2</div>
                         </div>
                         <div v-if="page===1">
                             <div class="row">
-                                <h3>Share your work with us</h3>
+                                <h3 class="seller-application-header">Share your work with us</h3>
                             </div>
                             <div class="row">
                                 <p>To ensure the quality of our marketplace, we limit our seller community to the most qualified creators. Let our curators know why you'd be a great seller.</p>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label for="first_name" class="form-label">First Name</label>
+                                    <label for="first_name" class="form-label form-label-spacing">First Name</label>
                                     <input v-bind:class="{ 'border-danger': !validation.first_name}" v-model="first_name"
                                            id="first_name" class="form-control" type="text"/>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <label for="last_name" class="form-label form-label-spacing">Last Name</label>
                                     <input v-bind:class="{ 'border-danger': !validation.last_name}"  v-model="last_name"
                                            id="last_name" class="form-control" type="text"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label for="shop_category" class="form-label">Your Shop Category</label>
+                                    <label for="shop_category" class="form-label form-label-spacing">Your Shop Category</label>
                                     <select v-bind:class="{ 'border-danger': !validation.shop_category}" v-model="shop_category" id="shop_category" class="form-control" >
                                         <option value="3d">3d</option>
+                                        <option value="add_ons">Add-ons</option>
+                                        <option value="fonts">Fonts</option>
+                                        <option value="graphics">Graphics</option>
+                                        <option value="photos">Photos</option>
+                                        <option value="templates">Templates</option>
+                                        <option value="web_themes">Web Themes</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label for="portfolio_url" class="form-label">Portfolio Link</label>
+                                    <label for="portfolio_url" class="form-label form-label-spacing">Portfolio Link</label>
+                                    <div v-if="duplicate_portfolio" class="alert alert-danger d-flex align-items-center" role="alert">
+                                        <div>
+                                            A seller account already exists for this portfolio.
+                                        </div>
+                                    </div>
                                     <input @change="validatePortfolioURL" v-bind:class="{ 'border-danger': !validation.portfolio_url}"  v-model.lazy="portfolio_url"
                                            id="portfolio_url" class="form-control" type="text" />
                                 </div>
                             </div>
                             <div v-if="portfolio_url_unique" class="row">
                                 <div class="col-sm-12">
-                                    <label for="confirm_ownership" class="form-check-label">Yes, I confirm that the content I submit is authored by me</label>
                                     <input  v-bind:class="{ 'border-danger': !validation.portfolio_url_unique}" v-model="owns_content_confirmed"
                                             id="confirm_ownership" class="form-check-control" type="checkbox"/>
+                                    <label for="confirm_ownership" class="form-check-label">Yes, I confirm that the content I submit is authored by me</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <fieldset>
-                                        <legend>Do you already have an online store?</legend>
+                                        <p class="form-label-spacing">Do you already have an online store?</p>
 
                                         <input type="radio" class="form-check-input" id="online_store_yes" value="yes" v-model="online_store">
                                         <label for="online_store_yes" class="form-check-label">Yes</label>
-
+                                        <br/>
                                         <input type="radio" class="form-check-input" id="online_store_no" value="no" v-model="online_store">
                                         <label for="online_store_no" class="form-check-label">No</label>
-                                    </fieldset>
                                 </div>
                             </div>
                             <div v-if="online_store==='yes'" class="row">
                                 <div class="col-sm-12">
-                                    <label for="online_store_list" class="form-label">Online stores I sell on today</label>
+                                    <label for="online_store_list" class="form-label form-label-spacing">Online stores I sell on today</label>
                                     <textarea v-bind:class="{ 'border-danger': !validation.online_store_list}" v-model="online_store_list"
-                                              id="online_store_list" class="form-control" placeholder="Enter Urls" ></textarea>
+                                              id="online_store_list" class="form-control" placeholder="Enter urls" ></textarea>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a class="btn btn-primary float-end" @click="nextPage">Next</a>
-                                </div>
+                            <div class="row justify-content-end footer">
+                                <a class="btn btn-primary btn-lg col-sm-2" @click="nextPage">Next</a>
                             </div>
                         </div>
                         <div v-if="page===2">
                             <div class="row">
-                                <h3>Tell us a little about yourself</h3>
+                                <h3 class="seller-application-header">Tell us a little about yourself</h3>
                             </div>
                             <div class="row">
                                 <p>Your answers will help us provide you with a more personalized experience as a seller!</p>
                             </div>
                             <div class="row">
-                                <label for="questions_one" class="form-label">{{ question_one }}</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_one}" v-model="answer_one"
+                                <label for="questions_one" class="form-label form-label-spacing">{{ question_one }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.answer_one}" v-model="answer_one"
                                         id="questions_one" class="form-control">
                                     <option v-for="option in question_one_options" :value="option.value">
                                         {{ option.text }}
@@ -92,8 +99,8 @@
                                 </select>
                             </div>
                             <div class="row">
-                                <label for="question_two" class="form-label">{{ question_two }}</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_two}" v-model="answer_two"
+                                <label for="question_two" class="form-label form-label-spacing">{{ question_two }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.answer_two}" v-model="answer_two"
                                         id="question_two" class="form-control">
                                     <option v-for="option in question_two_options" :value="option.value">
                                         {{ option.text }}
@@ -101,17 +108,17 @@
                                 </select>
                             </div>
                             <div class="row">
-                                <label for="question_one" class="form-label">{{ question_three }}</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_three}" v-model="answer_three"
+                                <label for="question_one" class="form-label form-label-spacing">{{ question_three }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.answer_three}" v-model="answer_three"
                                         id="question_one" class="form-control">
                                     <option v-for="option in question_three_options" :value="option.value">
                                         {{ option.text }}
                                     </option>
                                 </select>
                             </div>
-                            <div class="row">
+                            <div class="row footer">
                                 <div class="col-sm-6">
-                                    <a @click="previousPage" class="float-start">< Back</a>
+                                    <a @click="previousPage" class="float-start navigation-link">< Back</a>
                                 </div>
                                 <div class="col-sm-6">
                                     <a @click="submit" class="btn btn-primary float-end">Submit Application</a>
@@ -119,16 +126,16 @@
                             </div>
                         </div>
                         <div v-if="page===3">
-                            <div class="row">
-                                <img src="images/icon-sent.png" alt="Application Sent"/>
+                            <div class="row d-flex justify-content-center">
+                                <img src="images/icon-sent.png" style="width: 200px;" alt="Application Sent"/>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-sm-8">
                                     <h3>Thank you for applying to become a seller with Creative Market!</h3>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-sm-8">
                                     <p>
                                         Our curators are reviewing your application. We'll get back to you within <b>5-7 business days.</b>
                                         Meanwhile you already have access to your Shop Studio, so let's start setting up your store!
@@ -175,6 +182,7 @@ export default {
             page: 1,
             portfolio_url_unique: false,
             owns_content_confirmed: false,
+            duplicate_portfolio: false,
             first_name: "",
             last_name: "",
             shop_category: "",
@@ -251,8 +259,10 @@ export default {
                     }
                 }).then(function (response) {
                     self.portfolio_url_unique = response.data.unique;
+                    self.duplicate_portfolio = !response.data.unique;
                 });
             } else {
+                this.duplicate_portfolio = false;
                 this.portfolio_url_unique = false;
             }
         },
@@ -312,23 +322,23 @@ export default {
         },
         validatePageTwo: function () {
             let valid = true;
-            if (this.question_one === "") {
+            if (this.answer_one === "") {
                 valid = false;
-                this.validation.question_one = false;
+                this.validation.answer_one = false;
             } else {
-                this.validation.question_one = true;
+                this.validation.answer_one = true;
             }
-            if (this.question_two === "") {
+            if (this.answer_two === "") {
                 valid = false;
-                this.validation.question_two = false;
+                this.validation.answer_two = false;
             } else {
-                this.validation.question_two = true;
+                this.validation.answer_two = true;
             }
-            if (this.question_three === "") {
+            if (this.answer_three === "") {
                 valid = false;
-                this.validation.question_three = false;
+                this.validation.answer_three = false;
             } else {
-                this.validation.question_three = true;
+                this.validation.answer_three = true;
             }
             return valid;
         },

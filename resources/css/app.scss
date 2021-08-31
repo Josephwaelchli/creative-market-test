@@ -1,5 +1,42 @@
+$font-family-base: 'Helvetica';
+$primary: #008980;
+
 @import "~bootstrap/scss/bootstrap";
 
 body.app-container {
-    background: url('../assets/bg-pattern.png');
+    background-image: url('../assets/bg-pattern.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom;
+}
+
+.navigation-link {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.seller-application {
+    padding: 3rem;
+}
+
+.btn-primary {
+    color: #f0f0f0;
+}
+.btn-primary:hover {
+    color: #f0f0f0;
+}
+
+.seller-application-header {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-label-spacing {
+    font-weight: 600;
+    margin-bottom: 0;
+    margin-top: 2rem;
+}
+
+.footer {
+    margin-top: 1rem;
 }
