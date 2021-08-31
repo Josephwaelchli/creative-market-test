@@ -40,6 +40,7 @@ tweaks via sass variable overrides and additional classes. All assets are compil
 ###Running the application
 
 * Clone the project source to your machine: `git@github.com:Josephwaelchli/creative-market-test.git`
+* Run `cp .env.exmaple .env` to create a base environment file.
 * If you do not have docker, download and install from the docker website: https://www.docker.com/products/docker-desktop
 * After installing docker, run the following command from the root of the project (this will install the necessary 
   components to run the project via Laravel Sail). `docker run --rm \
@@ -50,6 +51,7 @@ tweaks via sass variable overrides and additional classes. All assets are compil
   composer install --ignore-platform-reqs`
 * Replace `sail` with `./vendor/bin/sail` if you do not have sail aliased. 
 * Run `sail up` to launch the docker image. 
+* Run `sail php artisan key:generate` to create a valid app key.
 * Run `sail npm ci` to install components. 
 * Run `sail npm run dev` to compile resources. The first run may only download additional webpack components 
   (a message will warn you if this is the case) re-run this command to compile assets if this cases arises.
