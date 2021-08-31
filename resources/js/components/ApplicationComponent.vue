@@ -83,8 +83,8 @@
                                 <p>Your answers will help us provide you with a more personalized experience as a seller!</p>
                             </div>
                             <div class="row">
-                                <label for="questions_one" class="form-label">When creating product to sell, which best describes your perspective on quality?</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_one}" v-model="question_one"
+                                <label for="questions_one" class="form-label">{{ question_one }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.question_one}" v-model="answer_one"
                                         id="questions_one" class="form-control">
                                     <option v-for="option in question_one_options" :value="option.value">
                                         {{ option.text }}
@@ -92,8 +92,8 @@
                                 </select>
                             </div>
                             <div class="row">
-                                <label for="question_two" class="form-label">How would you describe your experience level as an online seller?</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_two}" v-model="question_two"
+                                <label for="question_two" class="form-label">{{ question_two }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.question_two}" v-model="answer_two"
                                         id="question_two" class="form-control">
                                     <option v-for="option in question_two_options" :value="option.value">
                                         {{ option.text }}
@@ -101,8 +101,8 @@
                                 </select>
                             </div>
                             <div class="row">
-                                <label for="question_one" class="form-label">How would you describe your understanding of business and marketing?</label>
-                                <select v-bind:class="{ 'border-danger': !validation.question_three}" v-model="question_three"
+                                <label for="question_one" class="form-label">{{ question_three }}</label>
+                                <select v-bind:class="{ 'border-danger': !validation.question_three}" v-model="answer_three"
                                         id="question_one" class="form-control">
                                     <option v-for="option in question_three_options" :value="option.value">
                                         {{ option.text }}
@@ -181,9 +181,12 @@ export default {
             portfolio_url: "",
             online_store: "",
             online_store_list: "",
-            question_one: "",
-            question_two: "",
-            question_three: "",
+            answer_one: "",
+            answer_two: "",
+            answer_three: "",
+            question_one: "When creating product to sell, which best describes your perspective on quality?",
+            question_two: "How would you describe your experience level as an online seller?",
+            question_three: "How would you describe your understanding of business and marketing?",
             question_one_options: questionOneAnswers,
             question_two_options: questionTwoAnswers,
             question_three_options: questionThreeAnswers,
@@ -194,9 +197,9 @@ export default {
                 portfolio_url : true,
                 portfolio_url_unique : true,
                 online_store_list : true,
-                question_one : true,
-                question_two : true,
-                question_three : true,
+                answer_one : true,
+                answer_two : true,
+                answer_three : true,
             }
         }
     },
@@ -216,11 +219,20 @@ export default {
                         portfolio_url : this.portfolio_url,
                         meta : JSON.stringify({
                             online_store_list : this.online_store_list,
-                            answers : {
-                                one : this.question_one,
-                                two : this.question_two,
-                                three : this.question_three,
-                            },
+                            questions : [
+                                {
+                                    question: this.question_one,
+                                    answer: this.answer_one
+                                },
+                                {
+                                    question: this.question_two,
+                                    answer: this.answer_two
+                                },
+                                {
+                                    question: this.question_three,
+                                    answer: this.answer_three
+                                }
+                            ],
                         }),
                     }
                 }).then(function (response) {
