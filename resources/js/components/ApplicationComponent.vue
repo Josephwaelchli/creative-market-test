@@ -18,17 +18,19 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label for="first_name" class="form-label">First Name</label>
-                                    <input id="first_name" class="form-control" type="text" v-model="first_name"/>
+                                    <input v-bind:class="{ 'border-danger': !validation.first_name}" v-model="first_name"
+                                           id="first_name" class="form-control" type="text"/>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="last_name" class="form-label">Last Name</label>
-                                    <input id="last_name" class="form-control" type="text" v-model="last_name"/>
+                                    <input v-bind:class="{ 'border-danger': !validation.last_name}"  v-model="last_name"
+                                           id="last_name" class="form-control" type="text"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="shop_category" class="form-label">Your Shop Category</label>
-                                    <select id="shop_category" class="form-control" v-model="shop_category">
+                                    <select v-bind:class="{ 'border-danger': !validation.shop_category}" v-model="shop_category" id="shop_category" class="form-control" >
                                         <option value="3d">3d</option>
                                     </select>
                                 </div>
@@ -36,13 +38,15 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="portfolio_url" class="form-label">Portfolio Link</label>
-                                    <input id="portfolio_url" class="form-control" type="text" @change="validatePortfolioURL" v-model.lazy="portfolio_url"/>
+                                    <input @change="validatePortfolioURL" v-bind:class="{ 'border-danger': !validation.portfolio_url}"  v-model.lazy="portfolio_url"
+                                           id="portfolio_url" class="form-control" type="text" />
                                 </div>
                             </div>
                             <div v-if="portfolio_url_unique" class="row">
                                 <div class="col-sm-12">
                                     <label for="confirm_ownership" class="form-check-label">Yes, I confirm that the content I submit is authored by me</label>
-                                    <input id="confirm_ownership" class="form-check-control" type="checkbox" v-model="owns_content_confirmed"/>
+                                    <input  v-bind:class="{ 'border-danger': !validation.portfolio_url_unique}" v-model="owns_content_confirmed"
+                                            id="confirm_ownership" class="form-check-control" type="checkbox"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -61,7 +65,8 @@
                             <div v-if="online_store==='yes'" class="row">
                                 <div class="col-sm-12">
                                     <label for="online_store_list" class="form-label">Online stores I sell on today</label>
-                                    <textarea id="online_store_list" class="form-control" placeholder="Enter Urls" v-model="online_store_list"></textarea>
+                                    <textarea v-bind:class="{ 'border-danger': !validation.online_store_list}" v-model="online_store_list"
+                                              id="online_store_list" class="form-control" placeholder="Enter Urls" ></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -79,7 +84,8 @@
                             </div>
                             <div class="row">
                                 <label for="questions_one" class="form-label">When creating product to sell, which best describes your perspective on quality?</label>
-                                <select id="questions_one" class="form-control" v-model="question_one">
+                                <select v-bind:class="{ 'border-danger': !validation.question_one}" v-model="question_one"
+                                        id="questions_one" class="form-control">
                                     <option v-for="option in question_one_options" :value="option.value">
                                         {{ option.text }}
                                     </option>
@@ -87,7 +93,8 @@
                             </div>
                             <div class="row">
                                 <label for="question_two" class="form-label">How would you describe your experience level as an online seller?</label>
-                                <select id="question_two" class="form-control" v-model="question_two">
+                                <select v-bind:class="{ 'border-danger': !validation.question_two}" v-model="question_two"
+                                        id="question_two" class="form-control">
                                     <option v-for="option in question_two_options" :value="option.value">
                                         {{ option.text }}
                                     </option>
@@ -95,7 +102,8 @@
                             </div>
                             <div class="row">
                                 <label for="question_one" class="form-label">How would you describe your understanding of business and marketing?</label>
-                                <select id="question_one" class="form-control" v-model="question_three">
+                                <select v-bind:class="{ 'border-danger': !validation.question_three}" v-model="question_three"
+                                        id="question_one" class="form-control">
                                     <option v-for="option in question_three_options" :value="option.value">
                                         {{ option.text }}
                                     </option>
@@ -179,33 +187,46 @@ export default {
             question_one_options: questionOneAnswers,
             question_two_options: questionTwoAnswers,
             question_three_options: questionThreeAnswers,
+            validation : {
+                first_name : true,
+                last_name : true,
+                shop_category : true,
+                portfolio_url : true,
+                portfolio_url_unique : true,
+                online_store_list : true,
+                question_one : true,
+                question_two : true,
+                question_three : true,
+            }
         }
     },
     methods: {
         submit: function (event) {
-            let self = this;
+            if (this.validatePageOne() && this.validatePageTwo()) {
 
-            axios({
-                method: 'post',
-                url: 'api/v1/sellerApplications',
-                data: {
-                    first_name : this.first_name,
-                    last_name : this.last_name,
-                    owns_content_confirmed : this.owns_content_confirmed,
-                    shop_category : this.shop_category,
-                    portfolio_url : this.portfolio_url,
-                    meta : JSON.stringify({
-                        online_store_list : this.online_store_list,
-                        answers : {
-                            one : this.question_one,
-                            two : this.question_two,
-                            three : this.question_three,
-                        },
-                    }),
-                }
-            }).then(function (response) {
-                self.page = 3;
-            });
+                let self = this;
+                axios({
+                    method: 'post',
+                    url: 'api/v1/sellerApplications',
+                    data: {
+                        first_name : this.first_name,
+                        last_name : this.last_name,
+                        owns_content_confirmed : this.owns_content_confirmed,
+                        shop_category : this.shop_category,
+                        portfolio_url : this.portfolio_url,
+                        meta : JSON.stringify({
+                            online_store_list : this.online_store_list,
+                            answers : {
+                                one : this.question_one,
+                                two : this.question_two,
+                                three : this.question_three,
+                            },
+                        }),
+                    }
+                }).then(function (response) {
+                    self.page = 3;
+                });
+            }
         },
         validatePortfolioURL: function (event) {
             let self = this;
@@ -219,6 +240,8 @@ export default {
                 }).then(function (response) {
                     self.portfolio_url_unique = response.data.unique;
                 });
+            } else {
+                this.portfolio_url_unique = false;
             }
         },
         isValidURL : function (url) {
@@ -228,12 +251,75 @@ export default {
             return (res !== null)
         },
         nextPage: function (event) {
-            // TODO: validate data.
-            this.page = 2;
+            if (this.validatePageOne()) {
+                this.page = 2;
+            }
         },
         previousPage: function (event) {
             this.page = 1;
-        }
+        },
+        validatePageOne: function () {
+            let valid = true;
+            if (this.first_name === "") {
+                valid = false;
+                this.validation.first_name = false;
+            } else {
+                this.validation.first_name = true;
+            }
+            if (this.last_name === "") {
+                valid = false;
+                this.validation.last_name = false;
+            } else {
+                this.validation.last_name = true;
+            }
+            if (this.portfolio_url_unique === false) {
+                valid = false;
+                this.validation.portfolio_url_unique = false;
+            } else {
+                this.validation.portfolio_url_unique = true;
+            }
+            if (this.portfolio_url === "") {
+                valid = false;
+                this.validation.portfolio_url = false;
+            } else {
+                this.validation.portfolio_url = true;
+            }
+            if (this.shop_category === "") {
+                valid = false;
+                this.validation.shop_category = false;
+            } else {
+                this.validation.shop_category = true;
+            }
+            if (this.online_store === "yes" && this.online_store_list === "") {
+                valid = false;
+                this.online_store_list = false;
+            } else {
+                this.online_store_list = true;
+            }
+            return valid;
+        },
+        validatePageTwo: function () {
+            let valid = true;
+            if (this.question_one === "") {
+                valid = false;
+                this.validation.question_one = false;
+            } else {
+                this.validation.question_one = true;
+            }
+            if (this.question_two === "") {
+                valid = false;
+                this.validation.question_two = false;
+            } else {
+                this.validation.question_two = true;
+            }
+            if (this.question_three === "") {
+                valid = false;
+                this.validation.question_three = false;
+            } else {
+                this.validation.question_three = true;
+            }
+            return valid;
+        },
     }
 }
 </script>
