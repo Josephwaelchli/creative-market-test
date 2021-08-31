@@ -4,14 +4,14 @@
             <div class="col-md-8">
                 <div class="card align-middle">
                     <div class="card-body">
-                        <div class="row">
+                        <div v-if="page<3" class="row">
                             <div class="col-sm-8 text-start">SELLER APPLICATION</div>
-                            <div class="col-sm-4 text-end">STEP 1 OF 2</div>
+                            <div class="col-sm-4 text-end">STEP {{ page }} OF 2</div>
                         </div>
-                        <div class="row">
-                            <h3>Share your work with us</h3>
-                        </div>
-                        <div>
+                        <div v-if="page===1">
+                            <div class="row">
+                                <h3>Share your work with us</h3>
+                            </div>
                             <div class="row">
                                 <p>To ensure the quality of our marketplace, we limit our seller community to the most qualified creators. Let our curators know why you'd be a great seller.</p>
                             </div>
@@ -39,7 +39,7 @@
                                     <input id="portfolio_url" class="form-control" type="text" v-model="portfolio_url"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div v-if="portfolio_url" class="row">
                                 <div class="col-sm-12">
                                     <label for="confirm_ownership" class="form-check-label">Yes, I confirm that the content I submit is authored by me</label>
                                     <input id="confirm_ownership" class="form-check-control" type="checkbox" v-model="owns_content_confirmed"/>
@@ -58,79 +58,73 @@
                                     </fieldset>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div v-if="online_store==='yes'" class="row">
                                 <div class="col-sm-12">
                                     <label for="online_store_list" class="form-label">Online stores I sell on today</label>
-                                    <textarea id="online_store_list" class="form-control" placeholder="Enter Urls"></textarea>
+                                    <textarea id="online_store_list" class="form-control" placeholder="Enter Urls" v-model="online_store_list"></textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <a class="btn btn-primary float-end">Next</a>
+                                    <a class="btn btn-primary float-end" @click="nextPage">Next</a>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="row">
-                                <div class="col-sm-8 text-start">SELLER APPLICATION</div>
-                                <div class="col-sm-4 text-end">STEP 1 OF 2</div>
-                            </div>
+                        <div v-if="page===2">
                             <div class="row">
                                 <h3>Tell us a little about yourself</h3>
                             </div>
-                            <div>
-                                <div class="row">
-                                    <p>Your answers will help us provide you with a more personalized experience as a seller!</p>
+                            <div class="row">
+                                <p>Your answers will help us provide you with a more personalized experience as a seller!</p>
+                            </div>
+                            <div class="row">
+                                <label for="questions_one" class="form-label">When creating product to sell, which best describes your perspective on quality?</label>
+                                <select id="questions_one" class="form-control" v-model="question_one">
+                                    <option v-for="option in question_one_options" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label for="question_two" class="form-label">How would you describe your experience level as an online seller?</label>
+                                <select id="question_two" class="form-control" v-model="question_two">
+                                    <option v-for="option in question_two_options" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label for="question_one" class="form-label">How would you describe your understanding of business and marketing?</label>
+                                <select id="question_one" class="form-control" v-model="question_three">
+                                    <option v-for="option in question_three_options" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <a @click="previousPage" class="float-start">< Back</a>
                                 </div>
-                                <div class="row">
-                                    <label for="questions_one" class="form-label">When creating product to sell, which best describes your perspective on quality?</label>
-                                    <select id="questions_one" class="form-control" v-model="question_one">
-                                        <option v-for="option in question_one_options" :value="option.value">
-                                            {{ option.text }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <label for="question_two" class="form-label">How would you describe your experience level as an online seller?</label>
-                                    <select id="question_two" class="form-control" v-model="question_two">
-                                        <option v-for="option in question_two_options" :value="option.value">
-                                            {{ option.text }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <label for="question_one" class="form-label">How would you describe your understanding of business and marketing?</label>
-                                    <select id="question_one" class="form-control" v-model="question_three">
-                                        <option v-for="option in question_three_options" :value="option.value">
-                                            {{ option.text }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <a class="float-start">< Back</a>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <a @click="submit" class="btn btn-primary float-end">Submit Application</a>
-                                    </div>
+                                <div class="col-sm-6">
+                                    <a @click="submit" class="btn btn-primary float-end">Submit Application</a>
                                 </div>
                             </div>
-                            <div class="d-none">
-                                <div class="row">
-                                    <img src="images/icon-sent.png" alt="Application Sent"/>
+                        </div>
+                        <div v-if="page===3">
+                            <div class="row">
+                                <img src="images/icon-sent.png" alt="Application Sent"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Thank you for applying to become a seller with Creative Market!</h3>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <h3>Thank you for applying to become a seller with Creative Market!</h3>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <p>
-                                            Our curators are reviewing your application. We'll get back to you within <b>5-7 business days.</b>
-                                            Meanwhile you already have access to your Shop Studio, so let's start setting up your store!
-                                        </p>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <p>
+                                        Our curators are reviewing your application. We'll get back to you within <b>5-7 business days.</b>
+                                        Meanwhile you already have access to your Shop Studio, so let's start setting up your store!
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +164,7 @@ export default {
         ];
 
         return {
+            page: 1,
             first_name: "",
             last_name: "",
             shop_category: "",
@@ -206,12 +201,18 @@ export default {
                     }),
                 }
             }).then(function (response) {
-                debugger;
                 console.log(response);
+                this.page = 3;
             }).catch(function (error) {
-                debugger;
                 console.log(error);
             });
+        },
+        nextPage: function (event) {
+            // TODO: validate data.
+            this.page = 2;
+        },
+        previousPage: function (event) {
+            this.page = 1;
         }
     }
 }
