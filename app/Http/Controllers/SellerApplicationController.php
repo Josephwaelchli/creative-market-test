@@ -28,20 +28,10 @@ class SellerApplicationController extends Controller
 
     /**
      * @param Request $request
-     * @return SellerApplication
      */
-    public function create(Request $request): SellerApplication
+    public function create(Request $request)
     {
-        $data = [
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'shop_category' => $request->shop_category,
-            'portfolio_url' => $request->portfolio_url,
-            'owns_content_confirmed' => $request->owns_content_confirmed,
-            'meta' => $request->meta,
-        ];
-
-        // TODO: properly handle validation result.
+        // Validate data one last time before creating record.
         $validator = Validator::make(
             $request->all(),
             [
@@ -54,6 +44,24 @@ class SellerApplicationController extends Controller
             ]
         );
         $validation_errors = $validator->errors();
+        if ($validation_errors->any()) {
+            return response()->json(
+                [
+                    'error' => 'validation failed',
+                    'validation' => $validation_errors,
+                ]
+            )->setStatusCode(400);
+        }
+
+        // Parse necessary request content and create record if validation passes.
+        $data = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'shop_category' => $request->shop_category,
+            'portfolio_url' => $request->portfolio_url,
+            'owns_content_confirmed' => $request->owns_content_confirmed,
+            'meta' => $request->meta,
+        ];
 
         return SellerApplication::create($data);
     }
