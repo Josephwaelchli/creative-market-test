@@ -1,6 +1,6 @@
-##Creative Market Test Project
+## Creative Market Test Project
 
-###API
+### API
 This project was created as a test in the Creative Market Application process. 
 It was built using Laravel 8 to interface with a MySQL database via a rudimentary API.
 This API contains the following two end points: 
@@ -9,16 +9,16 @@ will return whether a given portfolio URL already exists within the seller appli
 * `POST` to `sellerApplications` which will create new seller applications records (assuming 
   validation passes).
 
-###Database
+### Database
 The database consists of two main tables (and a couple of laravel defaults that we will ignore for this).
 
-######shop_categories
+###### shop_categories
 * `id` unique, autoincrement, primary key
 * `slug` unique, human read-able string to use for classification
 * `name` a human-readable string that is descriptive enough to use in client facing contexts
 * `created_at`/`updated_at` timestamps
 
-######seller_applications
+###### seller_applications
 * `id` unique, autoincrement, primary key
 * `first_name` string
 * `last_name` string
@@ -33,11 +33,11 @@ data on the second page of the application. This structure allows us to easily s
   regardless of other changes that may be made to this form in the future. 
 * `created_at`/`updated_at` timestamps
 
-###Frontend
+### Frontend
 The form itself is powered by Vue 3, and styled using bootstrap 5, with a few minor
 tweaks via sass variable overrides and additional classes. All assets are compiled via mix. 
 
-###Running the application
+### Running the application
 
 * Clone the project source to your machine: `git@github.com:Josephwaelchli/creative-market-test.git`
 * Run `cp .env.exmaple .env` to create a base environment file.
